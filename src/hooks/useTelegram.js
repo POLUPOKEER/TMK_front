@@ -8,6 +8,7 @@ export const useTelegram = () => {
         const telegram = window.Telegram?.WebApp;
         if (telegram) {
             setTg(telegram);
+            telegram.ready()
             setUser(telegram.initDataUnsafe?.user);
         }
     }, []);
@@ -15,15 +16,15 @@ export const useTelegram = () => {
     const closeApp = () => {
         tg?.close();
     };
-
-    const sendData = (data) => {
-        tg?.sendData(JSON.stringify(data));
-    };
+    //Метод для отправки данных боту 
+    // const sendData = (data) => {
+    //     tg?.sendData(JSON.stringify(data));
+    // };
 
     return {
         tg,
         user,
         closeApp,
-        sendData
+        // sendData
     };
 };
