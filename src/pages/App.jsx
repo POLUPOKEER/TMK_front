@@ -5,11 +5,13 @@ import { useTelegram } from "../hooks/useTelegram"
 
 function App() {
 
-  const { closeApp } = useTelegram();
+  const { tg, user, closeApp } = useTelegram();
 
   return (
-    <div className='flex flex-col justify-center'>
-      <ProductList />
+    <div className='flex flex-col justify-center' style={{
+      backgroundColor: tg?.themeParams?.bg_color || '#ffffff'
+    }}>
+      <ProductList tg={tg} user={user} />
       <button className="bg-amber-700 px-5 w-[200px] h-[55px] text-amber-50 font-bold rounded-lg hover:bg-amber-800 transition-colors self-center" onClick={closeApp}>Закрыть приложение</button>
 
     </div>

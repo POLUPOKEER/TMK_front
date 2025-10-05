@@ -1,7 +1,7 @@
-import { useTelegram } from "../hooks/useTelegram";
+// import { useTelegram } from "../hooks/useTelegram";
 
-const ProductList = () => {
-    const { tg, user, } = useTelegram();
+const ProductList = ({ tg, user }) => {
+    // const { tg, user, } = useTelegram();
 
     const products = [
         { id: 1, name: 'Товар 1', price: 100 },
@@ -10,7 +10,7 @@ const ProductList = () => {
     ];
 
     const handleBuy = (product) => {
-        console.log(`user: ${user}, product: ${product.id}`);
+        console.log(`userID: ${user?.id}, userName: ${user?.firstName} product: ${product.id}`);
     }
 
     return (
