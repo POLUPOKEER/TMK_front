@@ -1,18 +1,31 @@
-import '../index.css'
-import { ProductList } from "../components/productList"
-import { useTelegram } from "../hooks/useTelegram"
-
+import { Header } from '../components/header';
+import Products from "./Products";
+import { Routes, Route } from 'react-router-dom'
+import { Basket } from './Basket'
+import { Profile } from "./Profile";
+import { useTelegramData } from "../contexts/telegramContext";
 
 function App() {
 
-  const { tg, user, closeApp } = useTelegram();
+  const telegramData = useTelegramData();
 
   return (
     <div className='flex flex-col justify-center' style={{
-      backgroundColor: tg?.themeParams?.bg_color || '#ffffff'
+      backgroundColor: telegramData.backgroundColor
     }}>
-      <ProductList tg={tg} user={user} />
-      <button className="bg-amber-700 px-5 w-[200px] h-[55px] text-amber-50 font-bold rounded-lg hover:bg-amber-800 transition-colors self-center" onClick={closeApp}>Закрыть приложение</button>
+      <Header />
+      <main className="container mx-auto px-4 py-6">
+        <Routes>
+          <Route path="/" element={<Products />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/basket" element={<Basket />} />
+          {/* <Route path="/order" element={<Order />} /> */}
+
+          {/* <Route path="/product" element={<Product />} /> */}
+          <Route path="/profile" element={<Profile />} />
+          {/* <Route path="*" element={<NotFound />} /> */}
+        </Routes>
+      </main>
 
     </div>
   )
