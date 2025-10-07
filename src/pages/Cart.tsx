@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useTelegramData } from "../contexts/telegramContext";
 import { API_CONFIG } from '../config/api';
-import { ProductCard } from '../components/productCard';
+import { CartProductCard } from '../components/CartProductCard';
 import { Product } from '../services/types/products';
 
-// Типы для данных корзины
+// Типы корзины
 export type CartItem = {
     id: string;
     nomenclatureId: number;
@@ -40,24 +40,16 @@ export const Cart = () => {
             try {
                 setLoading(true);
 
-                // Получаем корзину
                 const cartResponse = await fetch(`${API_CONFIG.baseUrl}/api/cart/${userID}`);
-                if (!cartResponse.ok) {
-                    throw new Error('Ошибка загрузки корзины');
-                }
-
+                if (!cartResponse.ok) throw new Error('Ошибка загрузки корзины');
                 const cartData: CartResponse = await cartResponse.json();
                 setCartData(cartData);
 
-                // Получаем полные данные товаров для отображения в карточках
-                const productIds = cartData.items.map(item => item.nomenclatureId);
-                if (productIds.length > 0) {
-                    // Используем существующий endpoint каталога или создаем моковые данные
-                    const productsResponse = await fetch(`${API_CONFIG.baseUrl}/api/Catalog`);
-                    if (productsResponse.ok) {
-                        const productsData: Product[] = await productsResponse.json();
-                        setProducts(productsData);
-                    }
+                // Загружаем все товары (для получения информации о номенклатуре)
+                const productsResponse = await fetch(`${API_CONFIG.baseUrl}/api/Catalog`);
+                if (productsResponse.ok) {
+                    const productsData: Product[] = await productsResponse.json();
+                    setProducts(productsData);
                 }
 
             } catch (err) {
@@ -68,16 +60,24 @@ export const Cart = () => {
             }
         };
 
-        if (userID) {
-            fetchCartData();
-        }
+        if (userID) fetchCartData();
     }, [userID]);
 
-    // Функция для получения товара по ID
     const getProductById = (productId: number): Product | undefined => {
         return products.find(product => product.id === productId);
     };
 
+    // 🔸 Заглушка: Сохранение изменений
+    const handleSaveChanges = (cartItemId: string, updated: { quantity: number; unit: 'm' | 't' }) => {
+        console.log('💾 Сохранить изменения:', { cartItemId, ...updated });
+        // TODO: здесь будет запрос PATCH /api/cart/item/:id
+    };
+
+    // 🔸 Заглушка: Удаление из корзины
+    const handleDeleteItem = (cartItemId: string) => {
+        console.log('🗑 Удалить из корзины:', cartItemId);
+        // TODO: здесь будет запрос DELETE /api/cart/item/:id
+    };
 
     if (loading) {
         return (
@@ -117,19 +117,17 @@ export const Cart = () => {
                 <>
                     <div className="space-y-4 mb-6">
                         {cartItems.map((cartItem) => {
-                            // Пытаемся найти полные данные товара
                             const product = getProductById(cartItem.nomenclatureId);
-
-
-
+                            if (!product) return null; // Пропускаем, если данные не найдены
 
                             return (
                                 <div key={cartItem.id} className="mb-4">
-                                    <ProductCard
-                                        product={product as Product}
+                                    <CartProductCard
+                                        product={product}
                                         initialQuantity={cartItem.quantity}
                                         initialUnit={cartItem.unit}
-                                        showCartButton={false}
+                                        onSave={(updated) => handleSaveChanges(cartItem.id, updated)}
+                                        onDelete={() => handleDeleteItem(cartItem.id)}
                                     />
                                 </div>
                             );

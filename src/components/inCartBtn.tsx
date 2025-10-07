@@ -5,6 +5,7 @@ import { useTelegramData } from '../contexts/telegramContext';
 import { API_CONFIG } from '../config/api';
 
 
+
 type Props = {
     product: Product;
     unit: 'm' | 't';
@@ -70,14 +71,14 @@ export const InCartBtn = ({ product, unit, quantity, onCartChange, showCartBtn }
 
     return (
         <button
-            onClick={handleCartToggle}
+            onClick={!inCart ? handleCartToggle : () => { }}
             disabled={loading}
             className={`mt-2 w-full py-2 rounded-lg font-semibold transition-colors ${inCart
                 ? 'bg-gray-500 text-white hover:bg-gray-600'
                 : 'bg-[#E35D14] text-white hover:bg-[#d24f0d]'
                 } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
-            {loading ? 'Загрузка...' : (inCart ? 'Удалить из корзины' : 'В корзину')}
+            {loading ? 'Загрузка...' : (inCart ? 'Товар в корзине' : 'В корзину')}
         </button>
     );
 };

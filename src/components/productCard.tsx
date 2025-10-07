@@ -146,6 +146,7 @@ const ProductCard = ({
                         <p className="text-sm text-green-600 font-semibold">В наличии на складе</p>
 
                         <InCartBtn
+                            key={`in-cart-${product.id}-`}
                             product={product}
                             unit={unit}
                             quantity={quantity}
