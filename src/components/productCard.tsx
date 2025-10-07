@@ -64,7 +64,7 @@ const ProductCard = ({
     }
 
     return (
-        <div className="bg-white rounded-2xl p-4 shadow-md transition-all">
+        <div className="bg-white p-4 shadow-md transition-all bg-gradient-to-r from-[#FE6400]/90 to-[#FE9600]/90">
             {/* Основная информация */}
             <div className="flex justify-between items-start">
                 <div>
