@@ -1,15 +1,24 @@
 import { useState, useMemo } from 'react'
 import { Product } from '../services/types/products'
 import { motion, AnimatePresence } from 'framer-motion'
+import { InCartBtn } from './inCartBtn'
 
 type Props = {
     product: Product
+    initialQuantity?: number
+    initialUnit?: 'm' | 't'
+    showCartButton?: boolean
 }
 
-const ProductCard = ({ product }: Props) => {
+const ProductCard = ({
+    product,
+    initialQuantity = 1,
+    initialUnit = 'm',
+    showCartButton = true
+}: Props) => {
     const [expanded, setExpanded] = useState(false)
-    const [unit, setUnit] = useState<'m' | 't'>('m') // единица измерения
-    const [quantity, setQuantity] = useState(1)
+    const [unit, setUnit] = useState<'m' | 't'>(initialUnit)
+    const [quantity, setQuantity] = useState(initialQuantity)
 
     // Берём первую цену (например, Екатеринбург)
     const priceInfo = product.prices[0]
@@ -28,6 +37,31 @@ const ProductCard = ({ product }: Props) => {
     }, [unit, quantity, priceInfo])
 
     const totalPrice = currentPrice * quantity
+
+    // Функция для изменения количества
+    const handleQuantityChange = (operation: 'increment' | 'decrement') => {
+        setQuantity((prev) => {
+            if (unit === 'm') {
+                // Для метров: шаг 1
+                return operation === 'increment' ? prev + 1 : Math.max(1, prev - 1)
+            } else {
+                // Для тонн: шаг 0.1
+                const step = 0.1
+                const newValue = operation === 'increment' ? prev + step : prev - step
+                return Math.max(0.1, Number(newValue.toFixed(1)))
+            }
+        })
+    }
+
+    // Функция для переключения единиц измерения
+    const handleUnitToggle = () => {
+        setUnit((prev) => {
+            const newUnit = prev === 'm' ? 't' : 'm'
+            // Сбрасываем количество при переключении
+            setQuantity(newUnit === 'm' ? 1 : 0.1)
+            return newUnit
+        })
+    }
 
     return (
         <div className="bg-white rounded-2xl p-4 shadow-md transition-all">
@@ -54,14 +88,16 @@ const ProductCard = ({ product }: Props) => {
             <div className="flex items-center justify-between mt-3">
                 <div className="flex items-center gap-2">
                     <button
-                        onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                        onClick={() => handleQuantityChange('decrement')}
                         className="px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300"
                     >
                         −
                     </button>
-                    <span className="min-w-[30px] text-center">{quantity}</span>
+                    <span className="min-w-[30px] text-center">
+                        {unit === 'm' ? quantity : quantity.toFixed(1)}
+                    </span>
                     <button
-                        onClick={() => setQuantity((q) => q + 1)}
+                        onClick={() => handleQuantityChange('increment')}
                         className="px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300"
                     >
                         +
@@ -74,7 +110,7 @@ const ProductCard = ({ product }: Props) => {
             {/* Кнопки управления */}
             <div className="flex justify-between items-center mt-4">
                 <button
-                    onClick={() => setUnit((prev) => (prev === 'm' ? 't' : 'm'))}
+                    onClick={handleUnitToggle}
                     className="text-sm text-blue-600 hover:underline"
                 >
                     Перевести в {unit === 'm' ? 'тонны' : 'метры'}
@@ -109,9 +145,16 @@ const ProductCard = ({ product }: Props) => {
                         </p>
                         <p className="text-sm text-green-600 font-semibold">В наличии на складе</p>
 
-                        <button className="mt-2 w-full bg-[#E35D14] text-white py-2 rounded-lg font-semibold hover:bg-[#d24f0d]">
-                            В корзину
-                        </button>
+                        <InCartBtn
+                            product={product}
+                            unit={unit}
+                            quantity={quantity}
+                            onCartChange={(inCart) => {
+                                // Опциональный колбэк, если нужно реагировать на изменения
+                                console.log('Статус корзины изменился:', inCart);
+                            }}
+                            showCartBtn={showCartButton}
+                        />
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -119,4 +162,4 @@ const ProductCard = ({ product }: Props) => {
     )
 }
 
-export { ProductCard };
+export { ProductCard }

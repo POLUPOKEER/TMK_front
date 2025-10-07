@@ -52,3 +52,11 @@ export type ProductsResponse = {
     pageSize: number;
     filters: ProductFilters;
 }
+
+export type CartItemData = {
+    userId: number
+    nomenclatureId: number
+    stockId: string
+    quantity: number
+    unit: 'm' | 't'
+}
