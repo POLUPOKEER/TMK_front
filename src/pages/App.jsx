@@ -1,9 +1,10 @@
-import { Header } from '../components/header';
+import { Navigation } from '../components/navigation';
 import Products from "./Products";
 import { Routes, Route } from 'react-router-dom'
-import { Basket } from './Basket'
+import { Cart } from './Cart'
 import { Profile } from "./Profile";
 import { useTelegramData } from "../contexts/telegramContext";
+import { NotFound } from './NotFound';
 
 function App() {
 
@@ -13,12 +14,13 @@ function App() {
     <div className='flex flex-col justify-center' style={{
       backgroundColor: telegramData.backgroundColor
     }}>
-      <Header />
+      <Navigation />
       <main className="container mx-auto px-4 py-6">
         <Routes>
-          <Route path="/" element={<Products />} />
+          <Route path="/home" element={<NotFound />} />
           <Route path="/products" element={<Products />} />
-          <Route path="/basket" element={<Basket />} />
+          <Route path="/" element={<Products />} />
+          <Route path="/cart" element={<Cart />} />
           {/* <Route path="/order" element={<Order />} /> */}
 
           {/* <Route path="/product" element={<Product />} /> */}

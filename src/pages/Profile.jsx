@@ -11,10 +11,10 @@ export const Profile = () => {
             }} className="text-3xl font-bold mb-4">Профиль</h1>
             <p style={{
                 color: telegramData.textColor
-            }}>Имя - {telegramData.user !== null ? telegramData.user.first_name : "Гость"}</p>
+            }}>Имя - {telegramData.user ? telegramData.user.first_name : "Гость"}</p>
             <p style={{
                 color: telegramData.textColor
-            }}>Фамилия - {telegramData.user !== null ? telegramData.user.last_name : "Гость"}</p>
+            }}>Фамилия - {telegramData.user ? telegramData.user.last_name : "Гость"}</p>
 
             <button style={{
                 color: telegramData.buttonTextColor,

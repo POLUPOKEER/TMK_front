@@ -1,6 +1,6 @@
 import { useTelegramData } from "../contexts/telegramContext";
 
-export const Basket = () => {
+export const Cart = () => {
 
     const telegramData = useTelegramData();
 

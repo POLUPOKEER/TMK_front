@@ -1,6 +1,5 @@
 import '../index.css'
 import { ProductList } from "../components/productList"
-import { Header } from '../components/header';
 import { useTelegramData } from '../contexts/telegramContext';
 
 const Products = () => {
