@@ -3,6 +3,8 @@ import { useTelegramData } from "../contexts/telegramContext";
 import { API_CONFIG } from '../config/api';
 import { CartProductCard } from '../components/CartProductCard';
 import { Product } from '../services/types/products';
+import { OrderButton } from '../components/orderButton';
+
 
 // Типы корзины
 export type CartItem = {
@@ -162,9 +164,7 @@ export const Cart = () => {
                                 <span>{new Date(cartData!.updatedAt).toLocaleString('ru-RU')}</span>
                             </div>
                         </div>
-                        <button className="w-full bg-[#E35D14] text-white py-3 rounded-lg font-semibold hover:bg-[#d24f0d] transition-colors mb-[55px]">
-                            Оформить заказ
-                        </button>
+                        <OrderButton />
                     </div>
                 </>
             )}
