@@ -6,7 +6,7 @@ export const Profile = () => {
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
-        inn: "",
+        customerInn: "",
         phone: "",
         email: "",
         address: ""
@@ -53,7 +53,7 @@ export const Profile = () => {
             userId: telegramData.user?.id || 112,
             customerFirstName: formData.firstName,
             customerSecondName: formData.lastName,
-            customerInn: formData.inn,
+            customerInn: formData.customerInn,
             phone: formData.phone,
             email: formData.email,
             address: formData.address
@@ -83,7 +83,7 @@ export const Profile = () => {
                     <input
                         type="text"
                         name="firstName"
-                        value={formData.firstName}
+                        value={formData.firstName || ""}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 bg-orange-500/10 border border-orange-500/20 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:border-orange-500/40 transition-colors"
                         placeholder="Введите ваше имя"
@@ -103,7 +103,7 @@ export const Profile = () => {
                     <input
                         type="text"
                         name="lastName"
-                        value={formData.lastName}
+                        value={formData.lastName || ""}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 bg-orange-500/10 border border-orange-500/20 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:border-orange-500/40 transition-colors"
                         placeholder="Введите вашу фамилию"
@@ -122,8 +122,8 @@ export const Profile = () => {
                     </label>
                     <input
                         type="text"
-                        name="inn"
-                        value={formData.customerInn}
+                        name="customerInn"
+                        value={formData.customerInn || ""}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 bg-orange-500/10 border border-orange-500/20 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:border-orange-500/40 transition-colors"
                         placeholder="Введите ваш ИНН"
@@ -139,7 +139,7 @@ export const Profile = () => {
                     <input
                         type="tel"
                         name="phone"
-                        value={formData.phone}
+                        value={formData.phone || ""}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 bg-orange-500/10 border border-orange-500/20 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:border-orange-500/40 transition-colors"
                         placeholder="+7 (XXX) XXX-XX-XX"
@@ -169,7 +169,7 @@ export const Profile = () => {
                     <input
                         type="text"
                         name="address"
-                        value={formData.address}
+                        value={formData.address || ""}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 bg-orange-500/10 border border-orange-500/20 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:border-orange-500/40 transition-colors"
                         placeholder="Введите ваш адрес"
