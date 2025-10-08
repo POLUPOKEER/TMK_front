@@ -3,6 +3,8 @@ import { useTelegramData } from "../contexts/telegramContext";
 import { API_CONFIG } from '../config/api';
 import { CartProductCard } from '../components/CartProductCard';
 import { Product } from '../services/types/products';
+import { OrderButton } from '../components/orderButton';
+
 
 // Типы корзины
 export type CartItem = {
@@ -74,9 +76,20 @@ export const Cart = () => {
     };
 
     // 🔸 Заглушка: Удаление из корзины
-    const handleDeleteItem = (cartItemId: string) => {
+    const handleDeleteItem = async (cartItemId: string) => {
         console.log('🗑 Удалить из корзины:', cartItemId);
-        // TODO: здесь будет запрос DELETE /api/cart/item/:id
+        const response = await fetch(`${API_CONFIG.baseUrl}/api/cart/remove/${cartItemId}`, {
+            method: "DELETE",
+        });
+
+        if (!response.ok) {
+            throw new Error(`Ошибка удаления: ${response.status}`);
+        }
+        if (response.ok) {
+            window.location.reload();
+        }
+
+        return await response.json();
     };
 
     if (loading) {
@@ -151,9 +164,7 @@ export const Cart = () => {
                                 <span>{new Date(cartData!.updatedAt).toLocaleString('ru-RU')}</span>
                             </div>
                         </div>
-                        <button className="w-full bg-[#E35D14] text-white py-3 rounded-lg font-semibold hover:bg-[#d24f0d] transition-colors">
-                            Оформить заказ
-                        </button>
+                        <OrderButton />
                     </div>
                 </>
             )}
