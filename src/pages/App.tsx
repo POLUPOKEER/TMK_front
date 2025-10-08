@@ -1,5 +1,5 @@
 import { Navigation } from '../components/navigation';
-import Products from "./Products";
+import { Products } from './Products';
 import { Routes, Route } from 'react-router-dom'
 import { Cart } from './Cart'
 import { Profile } from "./Profile";

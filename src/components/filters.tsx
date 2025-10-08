@@ -1,21 +1,29 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../services/store'
+import { fetchFilteredProducts, setFilters } from '../services/slices/productsSlice';
+
 
 const PipeFilter = () => {
+
+    const dispatch = useDispatch<AppDispatch>();
+
     // Состояния для фильтров
-    const [filters, setFilters] = useState({
+    const [filters, setLocalFilters] = useState({
         diameterFrom: '',
         diameterTo: '',
         thicknessFrom: '',
         thicknessTo: '',
         steelGrade: '',
         standard: '',
-        manufacturer: ''
+        // manufacturer: ''
+        productionType: ''
     });
 
     // Обработчик изменения полей ввода
-    const handleInputChange = (e) => {
+    const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
         const { name, value } = e.target;
-        setFilters(prev => ({
+        setLocalFilters(prev => ({
             ...prev,
             [name]: value
         }));
@@ -26,39 +34,21 @@ const PipeFilter = () => {
         try {
             // Создаем объект с параметрами для URL
             const params = new URLSearchParams();
-            
+
             // Добавляем только заполненные параметры
             if (filters.diameterFrom) params.append('diameterMin', filters.diameterFrom);
             if (filters.diameterTo) params.append('diameterMax', filters.diameterTo);
-            if (filters.thicknessFrom) params.append('thicknessMin', filters.thicknessFrom);
-            if (filters.thicknessTo) params.append('thicknessMax', filters.thicknessTo);
+            if (filters.thicknessFrom) params.append('wallMin', filters.thicknessFrom);
+            if (filters.thicknessTo) params.append('wallMax', filters.thicknessTo);
             if (filters.steelGrade) params.append('steelGrade', filters.steelGrade);
-            if (filters.standard) params.append('standard', filters.standard);
-            if (filters.manufacturer) params.append('manufacturer', filters.manufacturer);
-    
-            // Формируем URL с параметрами
-            const url = `/api/Catalog${params.toString() ? `?${params.toString()}` : ''}`;
-    
-            console.log('Отправляем запрос на:', url);
-    
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'accept': '*/*',
-                    'Content-Type': 'application/json',
-                },
-            });
-    
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-    
-            const result = await response.json();
-            console.log('Результаты фильтрации:', result);
-            
-            // Обрабатываем результат
-            // setFilteredPipes(result);
-    
+            if (filters.standard) params.append('gost', filters.standard);
+            if (filters.productionType) params.append('productionType', filters.productionType);
+
+
+
+            dispatch(setFilters(filters));
+            dispatch(fetchFilteredProducts(filters));
+
         } catch (error) {
             console.error('Ошибка:', error);
             alert('Произошла ошибка при применении фильтров');
@@ -67,21 +57,21 @@ const PipeFilter = () => {
 
     // Сброс фильтров
     const resetFilters = () => {
-        setFilters({
+        setLocalFilters({
             diameterFrom: '',
             diameterTo: '',
             thicknessFrom: '',
             thicknessTo: '',
             steelGrade: '',
             standard: '',
-            manufacturer: ''
+            productionType: ''
         });
     };
 
     return (
         <div className="p-4 bg-gray-50 min-h-screen">
             <h1 className="text-2xl font-bold text-gray-800 mb-6">Фильтр труб</h1>
-            
+
             <div className="bg-white rounded-lg shadow-sm p-6 space-y-6">
                 {/* ДИАМЕТР */}
                 <div>
@@ -149,7 +139,7 @@ const PipeFilter = () => {
                         name="steelGrade"
                         value={filters.steelGrade}
                         onChange={handleInputChange}
-                        placeholder="Например: СинТЗ"
+                        placeholder="Например: 09Г2С-15"
                         className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
                     />
                 </div>
@@ -169,13 +159,13 @@ const PipeFilter = () => {
 
                 {/* ПРОИЗВОДИТЕЛЬ */}
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-800 mb-3">ПРОИЗВОДИТЕЛЬ</h3>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-3">ТИП ПРОИЗВОДСТВА</h3>
                     <input
                         type="text"
-                        name="manufacturer"
-                        value={filters.manufacturer}
+                        name="productionType"
+                        value={filters.productionType}
                         onChange={handleInputChange}
-                        placeholder="Название производителя"
+                        placeholder="ТИП ПРОИЗВОДСТВА"
                         className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
                     />
                 </div>

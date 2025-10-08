@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useTelegramData } from "../contexts/telegramContext";
+// import { useTelegramData } from "../contexts/telegramContext";
 
 export const Profile = () => {
-    const telegramData = useTelegramData();
+    // const telegramData = useTelegramData();
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
